@@ -4,7 +4,10 @@ import constants
 from PIL import Image
 from typing import Optional
 from io import BytesIO
+import types
+import streamlit as st
 
+@st.cache(hash_funcs={types.GeneratorType: id})
 def get_frames(client: storage.Client, prefix: Optional[str]=None)-> Generator:
     """
     Args:
@@ -21,5 +24,3 @@ def get_frames(client: storage.Client, prefix: Optional[str]=None)-> Generator:
         data = blob.download_as_string()
         yield Image.open(BytesIO(data))
     
-def next_frame(frames: Generator):
-    return next(frames)
