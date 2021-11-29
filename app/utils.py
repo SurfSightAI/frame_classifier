@@ -8,7 +8,8 @@ import types
 import streamlit as st
 
 @st.cache(hash_funcs={types.GeneratorType: id})
-def get_frames(client: storage.Client, prefix: Optional[str]=None)-> Generator:
+def get_frames(prefix: Optional[str]=None)-> Generator:
+    storage_client = storage.Client()
     """
     Args:
         client (storage.Client): Google cloud storage client.
@@ -17,7 +18,7 @@ def get_frames(client: storage.Client, prefix: Optional[str]=None)-> Generator:
     Yields:
         Generator: All frames in bucket and prefix
     """
-    img_blobs = list(client.list_blobs(constants.FRAME_DATA_BUCKET, prefix=prefix))
+    img_blobs = list(storage_client.list_blobs(constants.FRAME_DATA_BUCKET, prefix=prefix))
     for index, blob in enumerate(img_blobs):
         if index == 0: 
             continue
