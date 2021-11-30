@@ -10,18 +10,19 @@ import streamlit as st
 
 @st.cache(hash_funcs={types.GeneratorType: id})
 def get_frames(prefix: Optional[str]=None)-> Generator:
+    """
+    Return a genorator of all frames in bucket. TODO: Filter out frames already in the labeled bucket.
+    """
     storage_client = storage.Client()
-    """
-    Args:
-        prefix (Optional[str], optional): An optional file path. Used to only get frames from specific spot.
-
-    Yields:
-        Generator: All frames in bucket, respecting prefix
-    """
+    
     img_blobs = list(storage_client.list_blobs(constants.FRAME_DATA_BUCKET, prefix=prefix))
+    labeled_img_blobs_names = [blob.name for blob in list(storage_client.list_blobs(constants.LABELED_FRAME_DATA_BUCKET, prefix=prefix))]
     for index, blob in enumerate(img_blobs):
         if index == 0: 
             continue
+        if blob.name in labeled_img_blobs_names:
+            continue
+        
         data = blob.download_as_string()
         yield blob.name, Image.open(BytesIO(data))
     
@@ -29,13 +30,7 @@ def get_frames(prefix: Optional[str]=None)-> Generator:
 
 def new_frame(frames: Generator, img_location: st.empty)-> Tuple[str, PIL_Image]:
     """
-    Return new frame and name.
-    Args:
-        frames (Generator)
-        img_location (st.empty)
-
-    Returns:
-        Tuple[str, Image]
+    Iterates over frames genorator and returns the frame and name. They are saved in session.
     """
     name, frame = next(frames)
     img_location.image(frame)
@@ -46,6 +41,7 @@ def new_frame(frames: Generator, img_location: st.empty)-> Tuple[str, PIL_Image]
         pass
     st.session_state["frame_name"] = name
     st.session_state["frame_data"] = frame.tobytes()
+    st.header(name)
 
     return name, frame
 
