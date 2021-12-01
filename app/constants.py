@@ -12,4 +12,4 @@ ACTIVE_PREFIX = "gating_data/visible"
 INACTIVE_PREFIX = "gating_data/not_visible"
 
 
-LOGO_PATH = Path("app/imgs/surfsight_logo.png")
+LOGO_PATH = Path("imgs/surfsight_logo.png")

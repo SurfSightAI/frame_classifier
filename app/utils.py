@@ -17,7 +17,7 @@ classification_map = {
 
 @st.cache(hash_funcs={types.GeneratorType: id})
 def get_frames(
-    spot_prefix: Optional[str], day_date_range: Tuple[int, int], month_date_range: Tuple[int, int], time_range: Tuple[int, int] 
+    spot_prefix: str, day_date_range: Tuple[int, int], month_date_range: Tuple[int, int], time_range: Tuple[int, int] 
     )-> Generator:
     """
     Return a genorator of all frames in bucket. Filter based on day, month and time.
@@ -64,7 +64,7 @@ def new_frame(
     labeled_img_blobs_names = [
         blob.name.split("/")[-1] 
         for index, blob in enumerate(list(storage_client.list_blobs(constants.LABELED_FRAME_DATA_BUCKET, prefix=classification_map.get(classification_type_prefix)))) 
-        if index!=0 and blob.name.split("/")[-1].endswith(".png") 
+        if blob.name.split("/")[-1].endswith(".png") 
         ]
 
     
