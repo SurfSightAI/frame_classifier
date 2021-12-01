@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 FRAME_DATA_BUCKET = "webcam_data_scraping"
@@ -13,3 +14,5 @@ INACTIVE_PREFIX = "gating_data/not_visible"
 
 
 LOGO_PATH = Path("imgs/surfsight_logo.png")
+
+CLASSIFICATION_PASSWORD = os.environ["CLASSIFICATION_PASSWORD"]
