@@ -1,11 +1,10 @@
 import datetime
 import os
 
-import streamlit as st
-from google.cloud import storage
-
 import constants
+import streamlit as st
 import utils
+from google.cloud import storage
 
 
 def main(img_location, storage_client):
@@ -36,29 +35,28 @@ def main(img_location, storage_client):
         start_time = st.sidebar.time_input("Start Time", datetime.time(6))
         end_time = st.sidebar.time_input("End Time", datetime.time(18))
 
-        day_date_range = (startdate.day, enddate.day)
-
-        month_date_range = (startdate.month, enddate.month)
-
         time_range = (start_time.hour, end_time.hour)
 
-        # Create frame generator
-        frames = utils.get_frames(
-            spot_prefix=selected_spot,
-            day_date_range=day_date_range,
-            month_date_range=month_date_range,
-            time_range=time_range,
-        )
-
         if classification_type == "Surf Quality":
+            # Write first frame to the page
+            utils.get_frame(
+                classification="quality",
+                spot_prefix=selected_spot,
+                start_date=startdate,
+                end_date=enddate,
+                time_range=time_range,
+                img_location=img_location,
+            )
 
-            # Iterate over frames, drop previous data form session, save new data
-            if st.button("New Frame"):
-                utils.new_frame(
-                    frames,
-                    img_location,
-                    classification_type_prefix=classification_type,
-                    storage_client=storage_client,
+            if st.button("Skip Frame"):
+                utils.skip_frame(classification="quality")
+                utils.get_frame(
+                    classification="quality",
+                    spot_prefix=selected_spot,
+                    start_date=startdate,
+                    end_date=enddate,
+                    time_range=time_range,
+                    img_location=img_location,
                 )
 
             cols = st.columns(3)
@@ -70,11 +68,13 @@ def main(img_location, storage_client):
                     frame_data = st.session_state["frame_data"]
                     frame_path = os.path.join(constants.CHOPPY_PREFIX, frame_name)
                     utils.save_frame(bucket, frame_path, frame_data, storage_client)
-                    utils.new_frame(
-                        frames,
-                        img_location,
-                        classification_type_prefix=classification_type,
-                        storage_client=storage_client,
+                    utils.get_frame(
+                        classification="quality",
+                        spot_prefix=selected_spot,
+                        start_date=startdate,
+                        end_date=enddate,
+                        time_range=time_range,
+                        img_location=img_location,
                     )
 
             # Classify frame as semi-choppy conditions
@@ -85,11 +85,13 @@ def main(img_location, storage_client):
                     frame_data = st.session_state["frame_data"]
                     frame_path = os.path.join(constants.SEMI_CHOP_PREFIX, frame_name)
                     utils.save_frame(bucket, frame_path, frame_data, storage_client)
-                    utils.new_frame(
-                        frames,
-                        img_location,
-                        classification_type_prefix=classification_type,
-                        storage_client=storage_client,
+                    utils.get_frame(
+                        classification="quality",
+                        spot_prefix=selected_spot,
+                        start_date=startdate,
+                        end_date=enddate,
+                        time_range=time_range,
+                        img_location=img_location,
                     )
 
             # Classify frame as glassy conditions
@@ -100,22 +102,35 @@ def main(img_location, storage_client):
                     frame_data = st.session_state["frame_data"]
                     frame_path = os.path.join(constants.GLASSY_PREFIX, frame_name)
                     utils.save_frame(bucket, frame_path, frame_data, storage_client)
-                    utils.new_frame(
-                        frames,
-                        img_location,
-                        classification_type_prefix=classification_type,
-                        storage_client=storage_client,
+                    utils.get_frame(
+                        classification="quality",
+                        spot_prefix=selected_spot,
+                        start_date=startdate,
+                        end_date=enddate,
+                        time_range=time_range,
+                        img_location=img_location,
                     )
 
         if classification_type == "Gating":
+            # Write initial frame to page
+            utils.get_frame(
+                classification="gating",
+                spot_prefix=selected_spot,
+                start_date=startdate,
+                end_date=enddate,
+                time_range=time_range,
+                img_location=img_location,
+            )
 
-            # Iterate over frames, drop previous data form session, save new data
-            if st.button("New Frame"):
-                utils.new_frame(
-                    frames,
-                    img_location,
-                    classification_type_prefix=classification_type,
-                    storage_client=storage_client,
+            if st.button("Skip Frame"):
+                utils.skip_frame(classification="gating")
+                utils.get_frame(
+                    classification="gating",
+                    spot_prefix=selected_spot,
+                    start_date=startdate,
+                    end_date=enddate,
+                    time_range=time_range,
+                    img_location=img_location,
                 )
 
             cols = st.columns(2)
@@ -127,11 +142,13 @@ def main(img_location, storage_client):
                     frame_data = st.session_state["frame_data"]
                     frame_path = os.path.join(constants.ACTIVE_PREFIX, frame_name)
                     utils.save_frame(bucket, frame_path, frame_data, storage_client)
-                    utils.new_frame(
-                        frames,
-                        img_location,
-                        classification_type_prefix=classification_type,
-                        storage_client=storage_client,
+                    utils.get_frame(
+                        classification="gating",
+                        spot_prefix=selected_spot,
+                        start_date=startdate,
+                        end_date=enddate,
+                        time_range=time_range,
+                        img_location=img_location,
                     )
 
             # Classify frame as inactive for gating
@@ -142,11 +159,13 @@ def main(img_location, storage_client):
                     frame_data = st.session_state["frame_data"]
                     frame_path = os.path.join(constants.INACTIVE_PREFIX, frame_name)
                     utils.save_frame(bucket, frame_path, frame_data, storage_client)
-                    utils.new_frame(
-                        frames,
-                        img_location,
-                        classification_type_prefix=classification_type,
-                        storage_client=storage_client,
+                    utils.get_frame(
+                        classification="gating",
+                        spot_prefix=selected_spot,
+                        start_date=startdate,
+                        end_date=enddate,
+                        time_range=time_range,
+                        img_location=img_location,
                     )
 
 
