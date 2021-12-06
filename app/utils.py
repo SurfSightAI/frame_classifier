@@ -1,14 +1,12 @@
 import datetime
-import types
 from io import BytesIO
-from typing import Generator, List, Tuple
+from typing import List, Tuple
 
+import constants
 import streamlit as st
 from google.cloud import storage
 from PIL import Image
 from PIL.Image import Image as PIL_Image
-
-import constants
 
 classification_map = {"Surf Quality": "surf_quality_data", "Gating": "gating_data"}
 
@@ -26,8 +24,8 @@ def get_frame(
     """
     storage_client = storage.Client()
     skipped_frames = st.session_state.get("skipped_frames")
-   
-    if classification == "gating":     
+
+    if classification == "gating":
         labeled_img_blobs_names = [
             blob.name.split("/")[-1]
             for index, blob in enumerate(
@@ -40,7 +38,7 @@ def get_frame(
             )
             if blob.name.split("/")[-1].endswith(".png")
         ]
-    if classification == "quality":     
+    if classification == "quality":
         labeled_img_blobs_names = [
             blob.name.split("/")[-1]
             for index, blob in enumerate(
@@ -52,10 +50,15 @@ def get_frame(
                 )
             )
             if blob.name.split("/")[-1].endswith(".png")
-        ]   
-            
-    img_blobs = [blob for blob in storage_client.list_blobs(constants.FRAME_DATA_BUCKET, prefix=spot_prefix) if blob.name.endswith(".png")]
-    
+        ]
+
+    img_blobs = [
+        blob
+        for blob in storage_client.list_blobs(
+            constants.FRAME_DATA_BUCKET, prefix=spot_prefix
+        )
+        if blob.name.endswith(".png")
+    ]
 
     for blob in img_blobs:
         str_name = blob.name.split("/")[-1]
@@ -64,10 +67,10 @@ def get_frame(
 
         if str_name in labeled_img_blobs_names:
             continue
-        
+
         if skipped_frames and f"{classification}_{str_name}" in skipped_frames:
             continue
-        
+
         if not str_name.endswith(".png") or spot_name != spot_prefix:
             continue
 
@@ -76,14 +79,15 @@ def get_frame(
 
         if not time_range[0] <= int(str_name.split("_")[3]) <= time_range[1]:
             continue
-        
+
         data = blob.download_as_string()
         img = Image.open(BytesIO(data))
         img_location.image(img, caption=blob.name, width=1000)
-        _cache_frame(img, str_name)
-        
+        _cache_frame(img, blob.name)
+
         return blob.name, img
     st.write("NO frames")
+
 
 def get_spot_names() -> List[str]:
     storage_client = storage.Client()
@@ -98,10 +102,8 @@ def get_spot_names() -> List[str]:
         )
     )
 
-def _cache_frame(
-    frame: PIL_Image,
-    name: str
-) -> None:
+
+def _cache_frame(frame: PIL_Image, name: str) -> None:
     """
     Cache frame info in session
     """
@@ -116,20 +118,19 @@ def _cache_frame(
     return name, frame
 
 
-def skip_frame(classification)-> None:
+def skip_frame(classification) -> None:
     frame_name = st.session_state.get("frame_name")
     if not frame_name:
         return
 
-    skipped_frames =  st.session_state.get("skipped_frames")
+    skipped_frames = st.session_state.get("skipped_frames")
     if skipped_frames:
         skipped_frames.append(f"{classification}_{frame_name}")
         st.session_state["skipped_frames"] = skipped_frames
     else:
         st.session_state["skipped_frames"] = [f"{classification}_{frame_name}"]
-    
-        
-        
+
+
 def save_frame(
     bucket: str, frame_path: str, img_data: bytes, storage_client: storage.Client
 ) -> None:
@@ -138,7 +139,7 @@ def save_frame(
     blob.upload_from_string(img_data, content_type="image/png")
 
 
-def parse_to_date(frame_name)-> datetime:
+def parse_to_date(frame_name) -> datetime:
     split_name = frame_name.split("_")
     year = int(split_name[0])
     month = int(split_name[1])

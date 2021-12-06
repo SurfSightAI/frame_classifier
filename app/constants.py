@@ -19,4 +19,4 @@ LOGO_PATH = Path("imgs/surfsight_logo.png")
 if os.environ.get("CLASSIFICATION_PASSWORD"):
     CLASSIFICATION_PASSWORD = os.environ["CLASSIFICATION_PASSWORD"]
 else:
-    CLASSIFICATION_PASSWORD = 'pass'
+    CLASSIFICATION_PASSWORD = "pass"

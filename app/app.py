@@ -1,11 +1,10 @@
 import datetime
 import os
 
-import streamlit as st
-from google.cloud import storage
-
 import constants
+import streamlit as st
 import utils
+from google.cloud import storage
 
 
 def main(img_location, storage_client):
@@ -36,31 +35,29 @@ def main(img_location, storage_client):
         start_time = st.sidebar.time_input("Start Time", datetime.time(6))
         end_time = st.sidebar.time_input("End Time", datetime.time(18))
 
-    
         time_range = (start_time.hour, end_time.hour)
-        
+
         if classification_type == "Surf Quality":
             # Write first frame to the page
             utils.get_frame(
-                classification='quality',
+                classification="quality",
                 spot_prefix=selected_spot,
                 start_date=startdate,
                 end_date=enddate,
                 time_range=time_range,
-                img_location=img_location
-                )
+                img_location=img_location,
+            )
 
             if st.button("Skip Frame"):
-                utils.skip_frame(classification='quality')
+                utils.skip_frame(classification="quality")
                 utils.get_frame(
-                    classification='quality',
+                    classification="quality",
                     spot_prefix=selected_spot,
                     start_date=startdate,
                     end_date=enddate,
                     time_range=time_range,
-                    img_location=img_location
-                    )
-    
+                    img_location=img_location,
+                )
 
             cols = st.columns(3)
             # Classify frame as choppy conditions
@@ -72,12 +69,12 @@ def main(img_location, storage_client):
                     frame_path = os.path.join(constants.CHOPPY_PREFIX, frame_name)
                     utils.save_frame(bucket, frame_path, frame_data, storage_client)
                     utils.get_frame(
-                        classification='quality',
+                        classification="quality",
                         spot_prefix=selected_spot,
                         start_date=startdate,
                         end_date=enddate,
                         time_range=time_range,
-                        img_location=img_location
+                        img_location=img_location,
                     )
 
             # Classify frame as semi-choppy conditions
@@ -89,12 +86,12 @@ def main(img_location, storage_client):
                     frame_path = os.path.join(constants.SEMI_CHOP_PREFIX, frame_name)
                     utils.save_frame(bucket, frame_path, frame_data, storage_client)
                     utils.get_frame(
-                        classification='quality',
+                        classification="quality",
                         spot_prefix=selected_spot,
                         start_date=startdate,
                         end_date=enddate,
                         time_range=time_range,
-                        img_location=img_location
+                        img_location=img_location,
                     )
 
             # Classify frame as glassy conditions
@@ -106,34 +103,34 @@ def main(img_location, storage_client):
                     frame_path = os.path.join(constants.GLASSY_PREFIX, frame_name)
                     utils.save_frame(bucket, frame_path, frame_data, storage_client)
                     utils.get_frame(
-                        classification='quality',
+                        classification="quality",
                         spot_prefix=selected_spot,
                         start_date=startdate,
                         end_date=enddate,
                         time_range=time_range,
-                        img_location=img_location
+                        img_location=img_location,
                     )
 
         if classification_type == "Gating":
             # Write initial frame to page
             utils.get_frame(
-                classification='gating',
+                classification="gating",
                 spot_prefix=selected_spot,
                 start_date=startdate,
                 end_date=enddate,
                 time_range=time_range,
-                img_location=img_location
+                img_location=img_location,
             )
 
             if st.button("Skip Frame"):
-                utils.skip_frame(classification='gating')
+                utils.skip_frame(classification="gating")
                 utils.get_frame(
-                    classification='gating',
+                    classification="gating",
                     spot_prefix=selected_spot,
                     start_date=startdate,
                     end_date=enddate,
                     time_range=time_range,
-                    img_location=img_location
+                    img_location=img_location,
                 )
 
             cols = st.columns(2)
@@ -146,12 +143,12 @@ def main(img_location, storage_client):
                     frame_path = os.path.join(constants.ACTIVE_PREFIX, frame_name)
                     utils.save_frame(bucket, frame_path, frame_data, storage_client)
                     utils.get_frame(
-                        classification='gating',
+                        classification="gating",
                         spot_prefix=selected_spot,
                         start_date=startdate,
                         end_date=enddate,
                         time_range=time_range,
-                        img_location=img_location
+                        img_location=img_location,
                     )
 
             # Classify frame as inactive for gating
@@ -163,12 +160,12 @@ def main(img_location, storage_client):
                     frame_path = os.path.join(constants.INACTIVE_PREFIX, frame_name)
                     utils.save_frame(bucket, frame_path, frame_data, storage_client)
                     utils.get_frame(
-                        classification='gating',
+                        classification="gating",
                         spot_prefix=selected_spot,
                         start_date=startdate,
                         end_date=enddate,
                         time_range=time_range,
-                        img_location=img_location
+                        img_location=img_location,
                     )
 
 
