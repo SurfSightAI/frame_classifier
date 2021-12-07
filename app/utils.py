@@ -68,10 +68,7 @@ def get_frame(
         if str_name in labeled_img_blobs_names:
             continue
 
-        if skipped_frames and f"{classification}_{str_name}" in skipped_frames:
-            continue
-
-        if not str_name.endswith(".png") or spot_name != spot_prefix:
+        if skipped_frames and f"{classification}_{blob.name}" in skipped_frames:
             continue
 
         if not start_date <= frame_date <= end_date:
