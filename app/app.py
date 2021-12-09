@@ -65,7 +65,6 @@ def main(img_location, error_location, storage_client):
                 if st.button("Undo Last Classification"):
                     utils.undo_previous_classification(
                         image_location=img_location,
-                        bucket=constants.LABELED_FRAME_DATA_BUCKET,
                         storage_client=storage_client
                         )
                     utils.get_frame(
@@ -82,11 +81,9 @@ def main(img_location, error_location, storage_client):
             # Classify frame as poor conditions
             with cols[0]:
                 if st.button("Poor"):
-                    bucket = constants.LABELED_FRAME_DATA_BUCKET
                     frame_name = st.session_state["cur_frame_name"]
-                    frame_data = st.session_state["cur_frame_data"]
-                    frame_path = os.path.join(constants.CHOPPY_PREFIX, frame_name)
-                    utils.save_frame(bucket, frame_path, frame_data, storage_client)
+                    frame_path = os.path.join(constants.POOR_PREFIX, frame_name)
+                    utils.save_frame(frame_path, storage_client)
                     utils.get_frame(
                         classification="quality",
                         spot_prefix=selected_spot,
@@ -100,11 +97,9 @@ def main(img_location, error_location, storage_client):
             # Classify frame as fair conditions
             with cols[1]:
                 if st.button("Fair"):
-                    bucket = constants.LABELED_FRAME_DATA_BUCKET
                     frame_name = st.session_state["cur_frame_name"]
-                    frame_data = st.session_state["cur_frame_data"]
-                    frame_path = os.path.join(constants.SEMI_CHOP_PREFIX, frame_name)
-                    utils.save_frame(bucket, frame_path, frame_data, storage_client)
+                    frame_path = os.path.join(constants.FAIR_PREFIX, frame_name)
+                    utils.save_frame(frame_path, storage_client)
                     utils.get_frame(
                         classification="quality",
                         spot_prefix=selected_spot,
@@ -118,11 +113,9 @@ def main(img_location, error_location, storage_client):
             # Classify frame as good conditions
             with cols[2]:
                 if st.button("Good"):
-                    bucket = constants.LABELED_FRAME_DATA_BUCKET
                     frame_name = st.session_state["cur_frame_name"]
-                    frame_data = st.session_state["cur_frame_data"]
-                    frame_path = os.path.join(constants.GLASSY_PREFIX, frame_name)
-                    utils.save_frame(bucket, frame_path, frame_data, storage_client)
+                    frame_path = os.path.join(constants.GOOD_PREFIX, frame_name)
+                    utils.save_frame(frame_path, storage_client)
                     utils.get_frame(
                         classification="quality",
                         spot_prefix=selected_spot,
@@ -161,7 +154,6 @@ def main(img_location, error_location, storage_client):
                 if st.button("Undo Last Classification"):
                     utils.undo_previous_classification(
                         image_location=img_location,
-                        bucket=constants.LABELED_FRAME_DATA_BUCKET,
                         storage_client=storage_client
                         )
                     utils.get_frame(
@@ -178,11 +170,9 @@ def main(img_location, error_location, storage_client):
             # Classify frame as inactive for gating
             with cols[0]:
                 if st.button("Visible"):
-                    bucket = constants.LABELED_FRAME_DATA_BUCKET
                     frame_name = st.session_state["cur_frame_name"]
-                    frame_data = st.session_state["cur_frame_data"]
                     frame_path = os.path.join(constants.ACTIVE_PREFIX, frame_name)
-                    utils.save_frame(bucket, frame_path, frame_data, storage_client)
+                    utils.save_frame(frame_path, storage_client)
                     utils.get_frame(
                         classification="gating",
                         spot_prefix=selected_spot,
@@ -196,11 +186,9 @@ def main(img_location, error_location, storage_client):
             # Classify frame as inactive for gating
             with cols[1]:
                 if st.button("Not Visible"):
-                    bucket = constants.LABELED_FRAME_DATA_BUCKET
                     frame_name = st.session_state["cur_frame_name"]
-                    frame_data = st.session_state["cur_frame_data"]
                     frame_path = os.path.join(constants.INACTIVE_PREFIX, frame_name)
-                    utils.save_frame(bucket, frame_path, frame_data, storage_client)
+                    utils.save_frame(frame_path, storage_client)
                     utils.get_frame(
                         classification="gating",
                         spot_prefix=selected_spot,

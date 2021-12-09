@@ -4,9 +4,9 @@ from pathlib import Path
 FRAME_DATA_BUCKET = "webcam_data_scraping"
 LABELED_FRAME_DATA_BUCKET = "labeled_webcam_data"
 
-GLASSY_PREFIX = "surf_quality_data/good"
-SEMI_CHOP_PREFIX = "surf_quality_data/fair"
-CHOPPY_PREFIX = "surf_quality_data/poor"
+GOOD_PREFIX = "surf_quality_data/good"
+FAIR_PREFIX = "surf_quality_data/fair"
+POOR_PREFIX = "surf_quality_data/poor"
 
 
 ACTIVE_PREFIX = "gating_data/visible"
