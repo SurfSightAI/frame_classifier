@@ -79,9 +79,9 @@ def main(img_location, error_location, storage_client):
                 )
 
             cols = st.columns(3)
-            # Classify frame as choppy conditions
+            # Classify frame as poor conditions
             with cols[0]:
-                if st.button("Choppy"):
+                if st.button("Poor"):
                     bucket = constants.LABELED_FRAME_DATA_BUCKET
                     frame_name = st.session_state["cur_frame_name"]
                     frame_data = st.session_state["cur_frame_data"]
@@ -97,9 +97,9 @@ def main(img_location, error_location, storage_client):
                         error_location=error_location
                     )
 
-            # Classify frame as semi-choppy conditions
+            # Classify frame as fair conditions
             with cols[1]:
-                if st.button("Semi-Chop"):
+                if st.button("Fair"):
                     bucket = constants.LABELED_FRAME_DATA_BUCKET
                     frame_name = st.session_state["cur_frame_name"]
                     frame_data = st.session_state["cur_frame_data"]
@@ -115,9 +115,9 @@ def main(img_location, error_location, storage_client):
                         error_location=error_location
                     )
 
-            # Classify frame as glassy conditions
+            # Classify frame as good conditions
             with cols[2]:
-                if st.button("Glassy"):
+                if st.button("Good"):
                     bucket = constants.LABELED_FRAME_DATA_BUCKET
                     frame_name = st.session_state["cur_frame_name"]
                     frame_data = st.session_state["cur_frame_data"]
