@@ -56,12 +56,13 @@ def get_frame(
         if blob.name.endswith(".png")
     ]
 
+    breakpoint()
     # Return first frame macthing filters
     for blob in img_blobs:
         str_name = blob.name.split("/")[-1]
         frame_date = parse_to_date(str_name)
 
-        if str_name in labeled_img_blobs_names:
+        if blob.name in labeled_img_blobs_names:
             continue
 
         if skipped_frames and f"{classification}/{blob.name}" in skipped_frames:
@@ -72,6 +73,7 @@ def get_frame(
 
         if not time_range[0] <= int(str_name.split("_")[3]) <= time_range[1]:
             continue
+        
 
         data = blob.download_as_string()
         img = Image.open(BytesIO(data))
@@ -166,7 +168,7 @@ def _get_labeled_blob_names(storage_client: storage.client, classification: str)
     """Define labeled frames based on gating bucket or surf_quality bucket"""
     if classification == "gating":
         return [
-            blob.name.split("/")[-1]
+            blob.name
             for index, blob in enumerate(
                 list(
                     storage_client.list_blobs(
@@ -179,7 +181,7 @@ def _get_labeled_blob_names(storage_client: storage.client, classification: str)
         ]
     if classification == "quality":
         return [
-            blob.name.split("/")[-1]
+            blob.name
             for index, blob in enumerate(
                 list(
                     storage_client.list_blobs(
