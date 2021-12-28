@@ -56,6 +56,7 @@ def get_frame(
         if blob.name.endswith(".png")
     ]
 
+
     # Return first frame macthing filters
     for blob in img_blobs:
         str_name = blob.name.split("/")[-1]
@@ -164,10 +165,14 @@ def _copy_blob(
 
 
 def _get_labeled_blob_names(storage_client: storage.client, classification: str) -> List[str]:
-    """Define labeled frames based on gating bucket or surf_quality bucket"""
+    """
+    Define labeled frames based on gating bucket or surf_quality bucket
+    Naming convention is: model_type/classification/spot/yyyy/mm/dd/yyyy_mm_dd_time.png
+    Strip off model_type and class so we compate identical strings
+    """
     if classification == "gating":
         return [
-            blob.name
+            "/".join(blob.name.split("/")[2:])
             for index, blob in enumerate(
                 list(
                     storage_client.list_blobs(
@@ -180,7 +185,7 @@ def _get_labeled_blob_names(storage_client: storage.client, classification: str)
         ]
     if classification == "quality":
         return [
-            blob.name
+            "/".join(blob.name.split("/")[2:])
             for index, blob in enumerate(
                 list(
                     storage_client.list_blobs(
