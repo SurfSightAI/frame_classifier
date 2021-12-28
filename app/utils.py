@@ -56,7 +56,6 @@ def get_frame(
         if blob.name.endswith(".png")
     ]
 
-    breakpoint()
     # Return first frame macthing filters
     for blob in img_blobs:
         str_name = blob.name.split("/")[-1]
