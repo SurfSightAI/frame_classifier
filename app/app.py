@@ -17,6 +17,8 @@ def main(img_location, error_location, storage_client):
         st.session_state["password"] = pwd
 
         spot_names = utils.get_spot_names()
+        spot_names.sort()
+        
         st.sidebar.image(str(constants.LOGO_PATH), use_column_width=True)
 
         # Take selected spot and parse name and timezone
