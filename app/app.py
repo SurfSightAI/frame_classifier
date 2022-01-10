@@ -36,6 +36,10 @@ def main(img_location, error_location, storage_client):
         end_time = st.sidebar.time_input("End Time", datetime.time(18))
 
         time_range = (start_time.hour, end_time.hour)
+        
+        
+        link = '[Frame Summary](labeling.summary.surfline.ai)'
+        st.markdown(link, unsafe_allow_html=True)
 
         if classification_type == "Surf Quality":
             # Write first frame to the page
