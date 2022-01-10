@@ -38,7 +38,7 @@ def main(img_location, error_location, storage_client):
         time_range = (start_time.hour, end_time.hour)
         
         
-        link = '[Frame Summary](labeling.summary.surfline.ai)'
+        link = '[Frame Summary](https://labeling.summary.surfline.ai)'
         st.markdown(link, unsafe_allow_html=True)
 
         if classification_type == "Surf Quality":
