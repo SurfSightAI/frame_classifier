@@ -53,7 +53,7 @@ def get_frame(
         for blob in storage_client.list_blobs(
             constants.FRAME_DATA_BUCKET, prefix=spot_prefix
         )
-        if blob.name.endswith(".png")
+        if blob.name.endswith(".png") and spot_prefix in blob.name.split("/")
     ]
 
 
